@@ -1,5 +1,7 @@
 # Check for required API keys
 import os
+from time import sleep
+
 if 'AV_API_KEY' not in os.environ:
     print('Missing AlphaVantage API key (AV_API_KEY)')
     exit(1)
@@ -35,7 +37,7 @@ def handle_delete(data):
     except ValueError:
         return b'2'
     # error dropping dataframe
-    except:
+    except Exception:
         return b'1'
 
 
@@ -51,7 +53,7 @@ def handle_data(data):
                 .to_datetime(data[1], format='%Y-%m-%d-%H:%M', utc=True)\
                 .tz_convert('US/Eastern')\
                 .tz_localize(None)
-        except:
+        except Exception:
             return b'1'
 
     latest_data = get_data(ticker_dataframe, date)
@@ -73,7 +75,7 @@ def handle_add(data):
         tickers.append(ticker)
     except ValueError:
         return b'2'
-    except:
+    except Exception:
         return b'1'
     return b'0'
 
@@ -84,7 +86,7 @@ def handle_report(data):
     try:
         get_report(ticker_dataframe)
         return b'0'
-    except:
+    except Exception:
         return b'1'
 
 
@@ -183,6 +185,7 @@ if __name__ == "__main__":
             print("Server loop running in thread:", server_thread.name)
             print(f'IP: {ip} PORT: {port}')
 
-            server_thread.join()
+            while True:
+                sleep(5)
     except (KeyboardInterrupt, SystemExit):
         exit(0)
