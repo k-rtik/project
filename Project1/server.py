@@ -126,7 +126,7 @@ def schedule_periodic_task():
     asyncio.set_event_loop(asyncio.new_event_loop())
 
     scheduler = AsyncIOScheduler(timezone="US/Eastern")
-    scheduler.add_job(run_periodic_collection, "cron", second="*/{sampling}".format(sampling=sampling))
+    scheduler.add_job(run_periodic_collection, "cron", minute="*/{sampling}".format(sampling=sampling))
     scheduler.start()
 
     asyncio.get_event_loop().run_forever()
