@@ -18,7 +18,14 @@ Before starting the server, please set the following environment variables:
 
 `FH_API_KEY`: FinnHub API key
 
+# Update
+Initially, I was using the [Intraday (Extended History)](https://www.alphavantage.co/documentation/#intraday-extended)
+API that splits 2 year historical data into 24 slices, with each slice requiring its own API call.
 
+I replaced that with the [1-2 month historical rates](https://www.alphavantage.co/documentation/#intraday)
+API instead.
+
+# Outdated
 ## Server start time
 The server application first performs a blocking historical data collection of
 initial list of tickers before starting the TCP server.

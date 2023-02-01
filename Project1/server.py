@@ -121,11 +121,12 @@ def run_periodic_collection():
     except (KeyboardInterrupt, SystemExit):
         exit(0)
 
+
 def schedule_periodic_task():
     asyncio.set_event_loop(asyncio.new_event_loop())
 
     scheduler = AsyncIOScheduler(timezone="US/Eastern")
-    scheduler.add_job(run_periodic_collection, "cron", minute="*/{sampling}".format(sampling=sampling))
+    scheduler.add_job(run_periodic_collection, "cron", second="*/{sampling}".format(sampling=sampling))
     scheduler.start()
 
     asyncio.get_event_loop().run_forever()
@@ -160,7 +161,6 @@ if __name__ == "__main__":
 
         # Generate first report before serving
         print('Starting initial data collection. Server will not be ready until this is done.')
-        print('If using free AV API key, this WILL take 5 minutes per ticker')
         ticker_data = fetch_all(tickers, sampling)
         ticker_dataframe = create_initial_dataframe(ticker_data)
         get_report(ticker_dataframe)
