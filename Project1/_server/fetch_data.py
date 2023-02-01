@@ -34,6 +34,9 @@ def get_initial_data(url: str):
             raise ValueError('Ticker not found')
         else:
             raise RuntimeError('Data collection failed') from e
+    except Exception as e:
+        print(e)
+        raise e
 
 
 def get_periodic_data(ticker_data, tickers):
@@ -64,12 +67,15 @@ def fetch(ticker, interval):
 
 def fetch_all(tickers, interval):
     ticker_data = {}
+    failed_tickers = []
+
     for ticker in tickers:
         try:
             ticker_data[ticker] = fetch(ticker, interval)
-        except (ValueError, RuntimeError) as e:
-            print(e)
-            print('Removing {ticker} from tickers list'.format(ticker=ticker))
-            tickers.remove(ticker)
+        except (ValueError, RuntimeError):
+            failed_tickers.append(ticker)
+
+    for ticker in failed_tickers:
+        tickers.remove(ticker)
 
     return ticker_data

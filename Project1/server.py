@@ -154,6 +154,7 @@ if __name__ == "__main__":
 
         global tickers, ticker_data, ticker_dataframe, sampling
         tickers = args.tickers.split(',')
+        print(tickers)
         sampling = args.sampling
 
         server = ThreadedTCPServer(("", port), ThreadedTCPRequestHandler)
