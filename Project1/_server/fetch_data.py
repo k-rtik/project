@@ -20,24 +20,17 @@ def save(df: pd.DataFrame, url='data.csv'):
         df.to_csv(f)
 
 
-def get_initial_data(url: str, backoff=10):
+def get_initial_data(url: str):
     try:
         data = requests.get(url)
         with StringIO() as text:
             text.write(data.text)
             text.seek(0)
-
             dataframe = pd.read_csv(text, index_col='timestamp', parse_dates=True, keep_date_col=False)[['close']]
             dataframe.index.names = ['datetime']
             return dataframe.sort_index()
-    # Handle rate limiter by "exponentially" backing off (20s, 20s, 40s, 60s)
-    # Worst case scenario: sleep for a whole day if more than 500 requests
     except ValueError as e:
-        # Check if rate limit exceeded (AV returns that in a Note, not Error Message)
-        if 'Note' in data.json():
-            sleep(backoff)
-            return get_initial_data(url, max(backoff*2, 60))
-        elif 'Error Message' in data.json():
+        if 'Error Message' in data.json():
             raise ValueError('Ticker not found')
         elif data.status_code != 200:
             raise RuntimeError('Data collection failed') from e
