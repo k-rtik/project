@@ -32,7 +32,7 @@ def get_initial_data(url: str):
     except ValueError as e:
         if 'Error Message' in data.json():
             raise ValueError('Ticker not found')
-        elif data.status_code != 200:
+        else:
             raise RuntimeError('Data collection failed') from e
 
 
